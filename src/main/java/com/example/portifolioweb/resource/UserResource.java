@@ -21,7 +21,7 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> findById(@PathVariable Long id) {
+    public User findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 

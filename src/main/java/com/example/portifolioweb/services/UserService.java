@@ -2,6 +2,7 @@ package com.example.portifolioweb.services;
 
 import com.example.portifolioweb.entities.User;
 import com.example.portifolioweb.repositories.UserRepository;
+import com.example.portifolioweb.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        try{
+            Optional<User> user = userRepository.findById(id);
+            return user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        }
+        catch (Exception e) {
+            throw new ResourceNotFoundException("User not found with ID: " + id);
+        }
     }
 
     public User insert(User user) {
@@ -27,21 +34,25 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        }
+        catch (Exception e) {
+            throw new ResourceNotFoundException("User not found with ID: " + id);
+        }
     }
 
     public User update(Long id, User user) {
-        Optional<User> existingUser = userRepository.findById(id) ;
-
-        if (existingUser.isPresent()) {
-            User updatedUser = existingUser.get();
-            updatedUser.setName(user.getName());
-            updatedUser.setEmail(user.getEmail());
-            updatedUser.setPhone(user.getPhone());
-            updatedUser.setPassword(user.getPassword());
-            return userRepository.save(updatedUser);
-        } else {
-            return null;
+        try {
+            User existingUser = this.findById(id);
+            existingUser.setName(user.getName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setPassword(user.getPassword());
+            return userRepository.save(existingUser);
+        }
+        catch (Exception e) {
+            throw new ResourceNotFoundException("User not found with ID: " + id);
         }
     }
 
