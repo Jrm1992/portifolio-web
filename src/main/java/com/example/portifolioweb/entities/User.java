@@ -1,6 +1,7 @@
 package com.example.portifolioweb.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.io.Serializable;
@@ -11,10 +12,15 @@ import java.util.Objects;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
     private int id;
+
     private String name;
+
     private String email;
+
     private String phone;
+
     private String password;
 
     public User() {

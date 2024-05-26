@@ -18,7 +18,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -31,14 +31,18 @@ public class UserService {
     }
 
     public User update(Long id, User user) {
-        User existingUser = userRepository.findById(id) ;
+        Optional<User> existingUser = userRepository.findById(id) ;
 
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPhone(user.getPhone());
-        existingUser.setPassword(user.getPassword());
-
-        return userRepository.save(existingUser);
+        if (existingUser.isPresent()) {
+            User updatedUser = existingUser.get();
+            updatedUser.setName(user.getName());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setPhone(user.getPhone());
+            updatedUser.setPassword(user.getPassword());
+            return userRepository.save(updatedUser);
+        } else {
+            return null;
+        }
     }
 
 }

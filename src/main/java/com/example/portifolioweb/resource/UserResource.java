@@ -21,7 +21,7 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id) {
+    public Optional<User> findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
@@ -29,7 +29,6 @@ public class UserResource {
     public void insert(@RequestBody User user) {
         userService.insert(user);
     }
-
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
